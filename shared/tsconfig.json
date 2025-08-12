@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    // File Layout
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    // Environment Settings
+    "module": "CommonJS",              // Match most NestJS apps unless you fully migrated to ESM
+    "target": "ES2017",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+
+    // Decorators support
+    "experimentalDecorators": true,    // Required for @IsString, @IsEmail, etc.
+    "emitDecoratorMetadata": true,     // Required so class-validator can read type info
+
+    "strictPropertyInitialization": false,
+
+    // Other Outputs
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    // Stricter Typechecking Options
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    // Recommended Options
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
