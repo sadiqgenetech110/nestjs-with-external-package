@@ -1,1 +1,1 @@
-# nestjs-with-external-package
+# Nestjs with External Package(For Entities, DTOs, etc)
