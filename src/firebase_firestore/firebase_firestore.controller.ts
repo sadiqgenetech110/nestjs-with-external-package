@@ -8,49 +8,51 @@ import {
   Delete,
 } from "@nestjs/common";
 import { FirebaseFirestoreService } from "./firebase_firestore.service";
+import { UsersService } from "./users/users.service";
 
 
 @Controller("firestore")
 export class FirebaseFirestoreController {
-  constructor(private readonly firestoreService: FirebaseFirestoreService) {}
+  constructor(
+    private readonly userService: UsersService) {}
 
   @Post("add/:collection")
-  async addDocument(
+  async addUser(
     @Param("collection") collection: string,
     @Body() data: any
   ): Promise<any> {
-    return this.firestoreService.addDocument(collection, data);
+    return this.userService.addUser(collection, data);
   }
 
   @Get("get/:collection/:id")
-  async getDocument(
+  async getUser(
     @Param("collection") collection: string,
     @Param("id") id: string
   ): Promise<any> {
-    return this.firestoreService.getDocument(collection, id);
+    return this.userService.getUser(collection, id);
   }
 
   @Put("update/:collection/:id")
-  async updateDocument(
+  async updateUser(
     @Param("collection") collection: string,
     @Param("id") id: string,
     @Body() data: any
-  ): Promise<void> {
-    return this.firestoreService.updateDocument(collection, id, data);
+  ): Promise<any> {
+    return this.userService.updateUser(collection, id, data);
   }
 
   @Delete("delete/:collection/:id")
-  async deleteDocument(
+  async deleteUser(
     @Param("collection") collection: string,
     @Param("id") id: string
   ): Promise<void> {
-    return this.firestoreService.deleteDocument(collection, id);
+    return this.userService.deleteUser(collection, id);
   }
 
   @Get("all/:collection")
-  async getAllDocuments(
+  async getAllUsers(
     @Param("collection") collection: string
   ): Promise<any[]> {
-    return this.firestoreService.getAllDocuments(collection);
+    return this.userService.getAllUsers(collection);
   }
 }
