@@ -14,6 +14,7 @@ import {
 import { FirebaseFirestoreService } from "./firebase_firestore.service";
 import { UsersService } from "./users/users.service";
 import { createFileInterceptor } from "../external/fileUploadInterceptors";
+import { CreateUserDto } from "shared/src/user.dto";
 
 
 @Controller("firestore")
@@ -83,5 +84,14 @@ export class FirebaseFirestoreController {
         error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  // Signin
+  @Post("signin/:collection")
+  async signIn(
+    @Param("collection") collection: string,
+    @Body() data: CreateUserDto
+  ): Promise<any> {
+    return this.userService.signin(collection, data);
   }
 }

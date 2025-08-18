@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Firestore } from 'firebase-admin/firestore';
 import { CreateUserDto } from 'shared/src/user.dto';
@@ -34,7 +34,9 @@ export class UsersService {
         const doc = await docRef.set(data);
         console.log(doc);
         // return docRef.id;
-        return data["token"];
+        return {
+           token : data["token"]
+        };
     }
 
   // Add User By ID
@@ -76,4 +78,18 @@ export class UsersService {
     });
     }
 
+// User Signin
+    async signin(collection: string, data: CreateUserDto): Promise<any> {
+         const querySnapshot = await this.firestore.collection(collection)
+         .where("email", "==", data.email)
+         .get();
+         if (!querySnapshot.empty) {
+                return {
+                    id : querySnapshot.docs[0].id
+                };
+            }
+            else {
+                throw new HttpException("User not found", HttpStatus.UNAUTHORIZED);
+            }
+    }
 }
