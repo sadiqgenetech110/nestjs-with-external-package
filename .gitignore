@@ -5,6 +5,7 @@
 /dist
 /shared/dist
 /shared/node_modules
+/src/certificates
 
 # Logs
 logs
