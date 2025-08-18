@@ -6,6 +6,7 @@
 /shared/dist
 /shared/node_modules
 /src/certificates
+/uploads
 
 # Logs
 logs
