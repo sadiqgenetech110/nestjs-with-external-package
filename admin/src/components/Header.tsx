@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function Header() {
   const router = useRouter();
@@ -8,6 +9,7 @@ export default function Header() {
     // localStorage.removeItem("token");
     localStorage.removeItem("id");
     router.replace("/login");
+    toast.success("Logout successfully");
   };
 
   return (

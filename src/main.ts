@@ -20,7 +20,8 @@ async function bootstrap() {
     origin: [
       // "http://localhost:3000", // if you run frontend on same machine 
       // "http://127.0.0.1:3000",
-      "http://192.168.14.37:3030", // 👈 your frontend IP:port 
+      "http://192.168.14.37:3030", // 👈 your frontend IP:port
+      "http://192.168.0.108:3030", // 👈 your frontend IP:port
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],

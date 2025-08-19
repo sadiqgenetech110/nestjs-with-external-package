@@ -11,7 +11,10 @@ export const authApi = createApi({
         body: credentials,
       }),
     }),
+    getUser: builder.query<any, { collection: string; id: string }>({
+      query: ({ collection, id }) => `/firestore/get/${collection}/${id}`,
+    }),
   }),
 });
 
-export const { useLoginMutation } = authApi;
+export const { useLoginMutation, useGetUserQuery } = authApi;
