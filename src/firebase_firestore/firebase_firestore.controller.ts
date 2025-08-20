@@ -15,12 +15,15 @@ import { FirebaseFirestoreService } from "./firebase_firestore.service";
 import { UsersService } from "./users/users.service";
 import { createFileInterceptor } from "../external/fileUploadInterceptors";
 import { CreateUserDto } from "shared/src/user.dto";
+import { ChatMessageService } from "./chat-message/chat-message.service";
+import { MessageDto } from "shared/src/message.dto";
 
 
 @Controller("firestore")
 export class FirebaseFirestoreController {
   constructor(
-    private readonly userService: UsersService) {}
+    private readonly userService: UsersService,
+    private readonly chatMessageService: ChatMessageService) {}
 
   @Post("add/:collection")
   async addUser(
@@ -93,5 +96,17 @@ export class FirebaseFirestoreController {
     @Body() data: CreateUserDto
   ): Promise<any> {
     return this.userService.signin(collection, data);
+  }
+
+  // Send Message
+  @Post('send')
+  async sendMessage(@Body() dto: MessageDto) {
+    return this.chatMessageService.sendMessage(dto);
+  }
+
+  // Get Messages
+  @Get('messages/:roomId')
+  async getMessages(@Param('roomId') roomId: string) {
+    return this.chatMessageService.getMessages(roomId);
   }
 }

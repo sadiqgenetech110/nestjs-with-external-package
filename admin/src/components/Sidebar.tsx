@@ -9,6 +9,7 @@ export default function Sidebar() {
     { href: "/dashboard/home", label: "Home" },
     { href: "/dashboard/profile", label: "Profile" },
     { href: "/dashboard/settings", label: "Settings" },
+    { href: "/dashboard/chat", label: "chats" },
   ];
 
   return (
