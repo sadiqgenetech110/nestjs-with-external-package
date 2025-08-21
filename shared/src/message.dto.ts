@@ -1,6 +1,10 @@
 import { IsString, IsNotEmpty, IsOptional, IsIn } from 'class-validator';
 
 export class MessageDto {
+  @IsString()
+  @IsOptional()
+  roomID?: string;
+
   @IsNotEmpty()
   @IsString()
   senderId: string;

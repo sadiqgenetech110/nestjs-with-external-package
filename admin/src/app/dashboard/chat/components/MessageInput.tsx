@@ -1,15 +1,47 @@
 "use client";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/store/store";   // ⬅️ import AppDispatch
+import { chatApi, useSendMessageMutation } from "../../../../services/chatApi";
 
 export default function MessageInput() {
   const [msg, setMsg] = useState("");
   const selectedUser = useSelector((state: RootState) => state.chat.selectedUser);
+  const selectedChatRoomID = useSelector((state: RootState) => state.chat.roomId);
+  const currentUserEmail = localStorage.getItem("email") || "";
 
-  const sendMessage = () => {
+  const [sendNewMessage] = useSendMessageMutation();
+  const dispatch = useDispatch<AppDispatch>();  // ⬅️ use typed dispatch
+
+  const sendMessage = async () => {
     if (!msg.trim() || !selectedUser) return;
-    console.log(`Send to ${selectedUser.name || selectedUser.email}:`, msg);
+
+    const newMessage = {
+      id: Date.now().toString(),              // temporary id
+      roomID: selectedChatRoomID || "",
+      senderId: currentUserEmail,
+      recipientId: selectedUser.email,
+      text: msg,
+      type: "text",
+      createdAt: Date.now(),
+    };
+
+    // ✅ Optimistic update
+    dispatch(
+      chatApi.util.updateQueryData("getMessages", selectedChatRoomID!, (draft: any) => {
+        draft.push(newMessage);
+      })
+    );
+
+    await sendNewMessage({
+        roomID: newMessage.roomID,
+        senderId: newMessage.senderId,
+        recipientId: newMessage.recipientId,
+        text: newMessage.text,
+        type: "text",   // hardcode it
+      });
+
+
     setMsg("");
   };
 

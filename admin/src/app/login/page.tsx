@@ -27,6 +27,7 @@ export default function Page() {
       console.log(res);
       // Example: save token
       localStorage.setItem("id", res.id);
+      localStorage.setItem("email", email);
       // ✅ navigate to dashboard
       router.push("/dashboard");
     } catch (err) {

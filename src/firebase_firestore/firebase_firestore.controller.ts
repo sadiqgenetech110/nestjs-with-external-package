@@ -109,4 +109,13 @@ export class FirebaseFirestoreController {
   async getMessages(@Param('roomId') roomId: string) {
     return this.chatMessageService.getMessages(roomId);
   }
+
+  // Get or create a chat room for 2 participants
+@Get("room/:senderId/:receiverId")
+async getOrCreateRoom(
+  @Param("senderId") senderId: string,
+  @Param("receiverId") receiverId: string
+) {
+  return this.chatMessageService.getOrCreateRoom(senderId, receiverId);
+}
 }

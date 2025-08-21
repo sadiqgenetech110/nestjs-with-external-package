@@ -11,10 +11,12 @@ interface User {
 
 interface ChatState {
   selectedUser: User | null;
+  roomId: string | null;
 }
 
 const initialState: ChatState = {
   selectedUser: null,
+  roomId: null,
 };
 
 const chatSlice = createSlice({
@@ -24,8 +26,11 @@ const chatSlice = createSlice({
     selectUser: (state, action: PayloadAction<User>) => {
       state.selectedUser = action.payload;
     },
+    setRoomId: (state, action: PayloadAction<string | null>) => {
+      state.roomId = action.payload;
+    },
   },
 });
 
-export const { selectUser } = chatSlice.actions;
+export const { selectUser, setRoomId } = chatSlice.actions;
 export default chatSlice.reducer;
