@@ -127,4 +127,42 @@ export class ChatMessageService {
     }
 
 
+    // Delete (soft delete) a message
+   async softDeleteMessage(roomId: string, messageId: string) {
+      const messageRef = this.firestore
+        .collection("chatRooms")
+        .doc(roomId)
+        .collection("messages")
+        .doc(messageId);
+
+      await messageRef.update({
+        deletedAt: Date.now(),
+      });
+
+      return { success: true, message: "Message deleted" };
+    }
+
+
+    async updateMessage(roomId: string, messageId: string, body: { text?: string; deletedAt?: number }) {
+        const messageRef = this.firestore
+          .collection("chatRooms")
+          .doc(roomId)
+          .collection("messages")
+          .doc(messageId);
+
+        const updateData: any = {};
+
+        if (body.text) {
+          updateData.text = body.text; // normal update
+        }
+
+        if (body.deletedAt) {
+          updateData.deletedAt = body.deletedAt; // soft delete
+        }
+
+        await messageRef.update(updateData);
+
+        return { id: messageId, ...updateData };
+}
+
 }

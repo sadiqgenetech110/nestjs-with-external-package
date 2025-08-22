@@ -118,4 +118,24 @@ async getOrCreateRoom(
 ) {
   return this.chatMessageService.getOrCreateRoom(senderId, receiverId);
 }
+
+
+// Delete (soft delete) a message
+@Put("messages/:roomId/:messageId/delete")
+async softDeleteMessage(
+  @Param("roomId") roomId: string,
+  @Param("messageId") messageId: string,
+) {
+  return this.chatMessageService.softDeleteMessage(roomId, messageId);
+}
+
+// Update Message Text
+@Put("messages/:roomId/:messageId")
+async updateMessage(
+  @Param("roomId") roomId: string,
+  @Param("messageId") messageId: string,
+  @Body() body: { text?: string; deletedAt?: number }
+) {
+  return this.chatMessageService.updateMessage(roomId, messageId, body);
+}
 }

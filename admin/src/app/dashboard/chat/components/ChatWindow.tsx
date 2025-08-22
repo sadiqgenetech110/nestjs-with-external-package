@@ -39,17 +39,21 @@ export default function ChatWindow() {
         {!isLoading && messages?.length === 0 && (
           <div className="text-gray-400 text-center">No messages yet</div>
         )}
-        {messages?.map((msg) => (
-          <MessageBubble
-            key={msg.id}
-            from={msg.senderId === currentUserEmail ? "Me" : selectedUser.displayName || selectedUser.email}
-            text={msg.text}
-            time={new Date(msg.createdAt).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-            mine={msg.senderId === currentUserEmail}
-          />
+        {messages
+          ?.filter((msg) => !msg.deletedAt) // 👈 don't show deleted
+          .map((msg) => (
+            <MessageBubble
+              key={msg.id}
+              messageId={msg.id}
+              roomID={selectedChatRoomID!}   // 👈 pass roomId
+              from={msg.senderId === currentUserEmail ? "Me" : selectedUser.displayName || selectedUser.email}
+              text={msg.text}
+              time={new Date(msg.createdAt).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+              mine={msg.senderId === currentUserEmail}
+            />
         ))}
       </div>
     </div>

@@ -14,12 +14,13 @@ interface Message {
   recipientId: string;
   text: string;
   createdAt: number;
+  deletedAt?: number;   // 👈 added optional
 }
 
 export const chatApi = createApi({
   reducerPath: "chatApi",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/firestore" }),
-  tagTypes: ["Users", "Rooms", "Messages"],   // ✅ add this
+  tagTypes: ["Users", "Rooms", "Messages"],
   endpoints: (builder) => ({
     getUsers: builder.query<User[], void>({
       query: () => "/all/users",
@@ -47,6 +48,28 @@ export const chatApi = createApi({
       }),
       invalidatesTags: (result, error, { roomID }) => [{ type: "Messages", id: roomID }],
     }),
+
+    // 👇 New soft delete API
+    deleteMessage: builder.mutation<any, { roomID: string; messageId: string }>({
+      query: ({ roomID, messageId }) => ({
+        url: `messages/${roomID}/${messageId}/delete`,
+        method: "PUT",
+        body: { deletedAt: Date.now() },
+      }),
+      invalidatesTags: (result, error, { roomID }) => [{ type: "Messages", id: roomID }],
+    }),
+
+    updateMessage: builder.mutation<
+    any,
+    { roomID: string; messageId: string; text?: string; deletedAt?: number }
+  >({
+    query: ({ roomID, messageId, ...rest }) => ({
+      url: `messages/${roomID}/${messageId}`,
+      method: "PUT",
+      body: rest,
+    }),
+    invalidatesTags: (result, error, { roomID }) => [{ type: "Messages", id: roomID }],
+  }),
   }),
 });
 
@@ -55,4 +78,6 @@ export const {
   useGetRoomQuery,
   useGetMessagesQuery,
   useSendMessageMutation,
+  useDeleteMessageMutation,   // 👈 export
+  useUpdateMessageMutation
 } = chatApi;
