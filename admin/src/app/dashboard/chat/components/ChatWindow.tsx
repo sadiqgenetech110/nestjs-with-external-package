@@ -1,14 +1,43 @@
 "use client";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../store/store";
 import MessageBubble from "./MessageBubble";
-import { useGetMessagesQuery } from "@/services/chatApi";
+import { chatApi, useGetMessagesQuery } from "@/services/chatApi";
+import { useEffect } from "react";
+import socket from "../../../../services/socket";
 
 export default function ChatWindow() {
+  const dispatch = useDispatch<AppDispatch>();
   const selectedUser = useSelector((state: RootState) => state.chat.selectedUser);
   const selectedChatRoomID = useSelector((state: RootState) => state.chat.roomId) || "";
-
   const currentUserEmail = localStorage.getItem("email") || "";
+
+  useEffect(() => {
+    if (!selectedChatRoomID) return;
+
+    // connect to socket
+    socket.connect();
+
+    // send join info if needed
+    socket.emit("joinRoom", { roomId: selectedChatRoomID, user: currentUserEmail });
+
+    // listen for new messages
+    socket.on("newChat", (message) => {
+      console.log("📩 New message from socket:", message);
+
+      // inject into RTK Query cache
+      dispatch(
+        chatApi.util.updateQueryData("getMessages", selectedChatRoomID, (draft: any) => {
+          draft.push(message);
+        })
+      );
+    });
+
+    return () => {
+      socket.off("newChat");
+      socket.disconnect();
+    };
+  }, [selectedChatRoomID, dispatch, currentUserEmail]);
 
   const { data: messages, isLoading, isError } = useGetMessagesQuery(selectedChatRoomID, {
     // pollingInterval: 1000,

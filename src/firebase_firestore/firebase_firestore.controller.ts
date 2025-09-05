@@ -17,6 +17,7 @@ import { createFileInterceptor } from "../external/fileUploadInterceptors";
 import { CreateUserDto } from "shared/src/user.dto";
 import { ChatMessageService } from "./chat-message/chat-message.service";
 import { MessageDto } from "shared/src/message.dto";
+import { ApiBody } from "@nestjs/swagger";
 
 
 @Controller("firestore")
@@ -25,6 +26,7 @@ export class FirebaseFirestoreController {
     private readonly userService: UsersService,
     private readonly chatMessageService: ChatMessageService) {}
 
+  @ApiBody({ type: CreateUserDto })   
   @Post("add/:collection")
   async addUser(
     @Param("collection") collection: string,

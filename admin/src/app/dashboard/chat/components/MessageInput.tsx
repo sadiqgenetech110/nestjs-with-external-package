@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/store/store";   // ⬅️ import AppDispatch
 import { chatApi, useSendMessageMutation } from "../../../../services/chatApi";
+import socket from "../../../../services/socket";
+
 
 export default function MessageInput() {
   const [msg, setMsg] = useState("");
@@ -41,6 +43,14 @@ export default function MessageInput() {
         type: "text",   // hardcode it
       });
 
+
+        socket.emit("chat", {
+          roomID: newMessage.roomID,
+          senderId: newMessage.senderId,
+          recipientId: newMessage.recipientId,
+          text: newMessage.text,
+          createdAt: newMessage.createdAt,
+        });
 
     setMsg("");
   };
