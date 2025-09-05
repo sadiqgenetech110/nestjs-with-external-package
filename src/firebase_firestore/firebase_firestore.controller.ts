@@ -17,7 +17,7 @@ import { createFileInterceptor } from "../external/fileUploadInterceptors";
 import { CreateUserDto } from "shared/src/user.dto";
 import { ChatMessageService } from "./chat-message/chat-message.service";
 import { MessageDto } from "shared/src/message.dto";
-import { ApiBody } from "@nestjs/swagger";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
 
 
 @Controller("firestore")
@@ -26,6 +26,7 @@ export class FirebaseFirestoreController {
     private readonly userService: UsersService,
     private readonly chatMessageService: ChatMessageService) {}
 
+  @ApiTags('Users')  
   @ApiBody({ type: CreateUserDto })   
   @Post("add/:collection")
   async addUser(
@@ -35,6 +36,7 @@ export class FirebaseFirestoreController {
     return this.userService.addUser(collection, data);
   }
 
+  @ApiTags('Users')  
   @Get("get/:collection/:id")
   async getUser(
     @Param("collection") collection: string,
@@ -43,6 +45,7 @@ export class FirebaseFirestoreController {
     return this.userService.getUser(collection, id);
   }
 
+  @ApiTags('Users')
   @Put("update/:collection/:id")
   async updateUser(
     @Param("collection") collection: string,
@@ -52,6 +55,7 @@ export class FirebaseFirestoreController {
     return this.userService.updateUser(collection, id, data);
   }
 
+  @ApiTags('Users')
   @Delete("delete/:collection/:id")
   async deleteUser(
     @Param("collection") collection: string,
@@ -60,6 +64,7 @@ export class FirebaseFirestoreController {
     return this.userService.deleteUser(collection, id);
   }
 
+  @ApiTags('Users')
   @Get("all/:collection")
   async getAllUsers(
     @Param("collection") collection: string
@@ -67,6 +72,7 @@ export class FirebaseFirestoreController {
     return this.userService.getAllUsers(collection);
   }
 
+  @ApiTags('Users')
   // Post media in gallery
   @Post('media')
   @UseInterceptors(
@@ -91,6 +97,7 @@ export class FirebaseFirestoreController {
     }
   }
 
+  @ApiTags('Users')
   // Signin
   @Post("signin/:collection")
   async signIn(
@@ -100,18 +107,21 @@ export class FirebaseFirestoreController {
     return this.userService.signin(collection, data);
   }
 
+  @ApiTags('Messages')
   // Send Message
   @Post('send')
   async sendMessage(@Body() dto: MessageDto) {
     return this.chatMessageService.sendMessage(dto);
   }
 
+  @ApiTags('Messages')
   // Get Messages
   @Get('messages/:roomId')
   async getMessages(@Param('roomId') roomId: string) {
     return this.chatMessageService.getMessages(roomId);
   }
 
+@ApiTags('Messages')
   // Get or create a chat room for 2 participants
 @Get("room/:senderId/:receiverId")
 async getOrCreateRoom(
@@ -122,6 +132,7 @@ async getOrCreateRoom(
 }
 
 
+@ApiTags('Messages')
 // Delete (soft delete) a message
 @Put("messages/:roomId/:messageId/delete")
 async softDeleteMessage(
@@ -131,6 +142,7 @@ async softDeleteMessage(
   return this.chatMessageService.softDeleteMessage(roomId, messageId);
 }
 
+@ApiTags('Messages')
 // Update Message Text
 @Put("messages/:roomId/:messageId")
 async updateMessage(

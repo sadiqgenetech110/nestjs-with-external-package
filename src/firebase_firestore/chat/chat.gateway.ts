@@ -8,6 +8,7 @@ import { NestGateway } from '@nestjs/websockets/interfaces/nest-gateway.interfac
 import { ChatService } from './chat.service';
 import { Bind, UseInterceptors } from '@nestjs/common';
 import { MessageDto } from 'shared/src/message.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @WebSocketGateway()
 export class ChatGateway implements NestGateway {
@@ -27,6 +28,7 @@ export class ChatGateway implements NestGateway {
     console.log('Disconnect', socket.handshake.query);
   }
 
+  @ApiTags('Messages')
   @Bind(MessageBody(), ConnectedSocket())
   @SubscribeMessage('chat')
   async handleNewMessage(chat: MessageDto, sender: any) {
@@ -36,12 +38,14 @@ export class ChatGateway implements NestGateway {
 
   }
 
+  @ApiTags('Messages')
   @SubscribeMessage('joinRoom')
   handleJoinRoom(@MessageBody() data: { roomId: string }, @ConnectedSocket() client: any) {
     client.join(data.roomId);
     console.log(`Client joined room ${data.roomId}`);
   }
   
+  @ApiTags('Messages')
   @SubscribeMessage('deleteMessage')
     handleDelete(@MessageBody() data: { roomId: string; messageId: string }, @ConnectedSocket() client: any) {
       // You’d also call your ChatService here to update Firestore...
